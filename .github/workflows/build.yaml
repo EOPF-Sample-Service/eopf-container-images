@@ -1,6 +1,6 @@
 name: Build EOPF container images
 
-on: workflow-dispatch
+on: workflow_dispatch
 
 
 jobs:
