@@ -30,4 +30,4 @@ jobs:
           context: .
           push: false
           tags: ghcr.io/${{ github.repository }}/eopf-dask:latest
-        file: eopf-dask/eopf-dask.dockerfile
+          file: eopf-dask/eopf-dask.dockerfile
