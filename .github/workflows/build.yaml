@@ -6,7 +6,7 @@ on: workflow_dispatch
 jobs:
   build-images:
     runs-on: ubuntu-latest
-  steps:
+    steps:
       # Check out the code from the repository
       - name: Checkout code
         uses: actions/checkout@v4
@@ -30,4 +30,4 @@ jobs:
           context: .
           push: false
           tags: ghcr.io/${{ github.repository }}/eopf-dask:latest
-          file: eopf-dask/eopf-dask.dockerfile
+        file: eopf-dask/eopf-dask.dockerfile
