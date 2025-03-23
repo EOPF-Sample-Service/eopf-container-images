@@ -11,6 +11,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
       # Make sure buildx is used
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -28,9 +31,9 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: harbor.user.eopf.eodc.eu/jupyterdask/eopf-dask:latest
-          #tags: eopf-dask:latest
           file: eopf-dask/eopf-dask.dockerfile
   
   build-jupyterlab-image:
@@ -39,6 +42,9 @@ jobs:
       # Check out the code from the repository
       - name: Checkout code
         uses: actions/checkout@v4
+        
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
       
       # Make sure buildx is used
       - name: Set up Docker Buildx
@@ -57,6 +63,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: harbor.user.eopf.eodc.eu/jupyterdask/eopf-jupyterlab:latest
           file: eopf-jupyterlab/eopf-jupyterlab.dockerfile
