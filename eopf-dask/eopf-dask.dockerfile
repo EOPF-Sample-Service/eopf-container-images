@@ -2,7 +2,12 @@ ARG BASE_CONTAINER=ghcr.io/dask/dask:2025.2.0-py3.11
 FROM $BASE_CONTAINER
 
 RUN mamba install -y \
-    xarray[io] \
+    xarray \
+    netCDF4 \
+    bottleneck \
+    zarr \
+    fsspec \
+    gdal \
     && mamba clean -tipy \
     && find /opt/conda/ -type f,l -name '*.a' -delete \
     && find /opt/conda/ -type f,l -name '*.pyc' -delete \

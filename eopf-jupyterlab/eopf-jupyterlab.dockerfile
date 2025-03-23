@@ -11,7 +11,12 @@ RUN apt-get update && \
 USER ${NB_UID}
 
 RUN mamba install -y \
-    xarray[io] \
+    xarray \
+    netCDF4 \
+    bottleneck \
+    zarr \
+    fsspec \
+    gdal \
     && mamba clean -tipy \
     && find /opt/conda/ -type f,l -name '*.a' -delete \
     && find /opt/conda/ -type f,l -name '*.pyc' -delete \
