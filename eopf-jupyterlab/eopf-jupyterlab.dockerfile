@@ -17,6 +17,7 @@ RUN mamba install -y \
     zarr \
     fsspec \
     gdal \
+    nbgitpuller \
     && mamba clean -tipy \
     && find /opt/conda/ -type f,l -name '*.a' -delete \
     && find /opt/conda/ -type f,l -name '*.pyc' -delete \
