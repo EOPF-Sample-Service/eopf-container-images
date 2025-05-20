@@ -15,7 +15,7 @@ RUN mamba install -y \
     jupyterlab \
     nbclassic \
     xarray \
-    dask_gateway \
+    dask-gateway \
     xarray-eopf \
     netCDF4 \
     bottleneck \
