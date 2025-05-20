@@ -2,6 +2,7 @@ ARG BASE_CONTAINER=ghcr.io/dask/dask:2025.5.0-py3.11
 FROM $BASE_CONTAINER
 
 RUN mamba install -y \
+    dask-gateway \
     xarray \
     netCDF4 \
     bottleneck \
