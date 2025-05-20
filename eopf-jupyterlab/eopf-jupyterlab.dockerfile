@@ -11,6 +11,9 @@ RUN apt-get update && \
 USER ${NB_UID}
 
 RUN mamba install -y \
+    jupyterhub-singleuser \
+    jupyterlab \
+    nbclassic \
     xarray \
     netCDF4 \
     bottleneck \
@@ -18,6 +21,7 @@ RUN mamba install -y \
     fsspec \
     gdal \
     nbgitpuller \
+
     && mamba clean -tipy \
     && find /opt/conda/ -type f,l -name '*.a' -delete \
     && find /opt/conda/ -type f,l -name '*.pyc' -delete \
