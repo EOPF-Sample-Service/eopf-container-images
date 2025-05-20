@@ -1,4 +1,4 @@
-ARG BASE_CONTAINER=ghcr.io/dask/dask-notebook:2025.2.0-py3.11
+ARG BASE_CONTAINER=ghcr.io/dask/dask-notebook:2025.5.0-py3.11
 FROM $BASE_CONTAINER
 
 USER root
@@ -15,6 +15,8 @@ RUN mamba install -y \
     jupyterlab \
     nbclassic \
     xarray \
+    dask_gateway \
+    xarray-eopf \
     netCDF4 \
     bottleneck \
     zarr \
