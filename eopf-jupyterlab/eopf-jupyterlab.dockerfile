@@ -12,7 +12,7 @@ USER ${NB_UID}
 
 COPY conda-lock.yml /tmp/conda-lock.yml
 
-RUN mamba create -n eopf-base -f /tmp/conda-lock.yml \
+RUN mamba create -y -n eopf-base -f /tmp/conda-lock.yml \
     && mamba activate eopf-base \
 
     && mamba clean -tipy \
