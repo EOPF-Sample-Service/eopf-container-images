@@ -16,3 +16,4 @@ RUN mamba install -y \
     && find /opt/conda/ -type f,l -name '*.js.map' -delete \
     && find /opt/conda/lib/python*/site-packages/bokeh/server/static -type f,l -name '*.js' -not -name '*.min.js' -delete \
     && rm -rf /opt/conda/pkgs
+    
