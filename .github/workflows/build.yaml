@@ -47,7 +47,10 @@ jobs:
         uses: mamba-org/setup-micromamba@v1
         with:
           micromamba-version: "latest"
-
+          
+      - name: Create lockenv
+        run: micromamba create -n lockenv
+        
       - name: Install conda-lock
         run: micromamba install -y -n lockenv -c conda-forge conda-lock
       
