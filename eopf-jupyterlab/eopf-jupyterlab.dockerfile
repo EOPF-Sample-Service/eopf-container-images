@@ -12,8 +12,8 @@ USER ${NB_UID}
 
 COPY eopf-jupyterlab/conda-lock.yml /tmp/conda-lock.yml
 
-RUN mamba create -n eopf-base -f /tmp/conda-lock.yml
-    && mamba activate eopf-base
+RUN mamba create -n eopf-base -f /tmp/conda-lock.yml \
+    && mamba activate eopf-base \
 
     && mamba clean -tipy \
     && find /opt/conda/ -type f,l -name '*.a' -delete \
