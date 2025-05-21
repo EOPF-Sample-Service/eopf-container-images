@@ -55,7 +55,7 @@ jobs:
         run: micromamba install -y -n lockenv -c conda-forge conda-lock
       
       - name: Generate conda lock file
-        run: micromamba run -n lockenv conda-lock lock -f eopf-jupyterlab/environment.yml -p linux-64
+        run: micromamba run -n lockenv conda-lock lock -f eopf-jupyterlab/environment.yml -p linux-64 -c conda-forge
 
       - name: Upload lock file
         uses: actions/upload-artifact@v4
