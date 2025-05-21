@@ -42,6 +42,25 @@ jobs:
       # Check out the code from the repository
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up Micromamba
+        uses: mamba-org/setup-micromamba@v1
+        with:
+          micromamba-version: "latest"
+
+      - name: Install conda-lock
+        run: |
+          micromamba install -n base -c conda-forge conda-lock
+
+      - name: Generate conda lock file
+        run: |
+          conda-lock lock -f environment.yml -p linux-64
+
+      - name: Upload lock file
+        uses: actions/upload-artifact@v4
+        with:
+          name: conda-lock
+          path: conda-lock.yml
         
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -58,6 +77,10 @@ jobs:
           username: ${{ secrets.HARBOR_ROBOT_USER }}
           password: ${{ secrets.HARBOR_ROBOT_PWD }}
       
+
+      - run: ./
+
+
       # Build and push image
       - name: Build and push
         uses: docker/build-push-action@v6
