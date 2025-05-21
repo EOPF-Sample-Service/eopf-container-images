@@ -49,12 +49,10 @@ jobs:
           micromamba-version: "latest"
 
       - name: Install conda-lock
-        run: |
-          micromamba install -n base -c conda-forge conda-lock
-
+        run: micromamba install -y -n lockenv -c conda-forge conda-lock
+      
       - name: Generate conda lock file
-        run: |
-          conda-lock lock -f environment.yml -p linux-64
+        run: micromamba run -n lockenv conda-lock lock -f environment.yml -p linux-64
 
       - name: Upload lock file
         uses: actions/upload-artifact@v4
@@ -76,9 +74,6 @@ jobs:
           registry: https://harbor.user.eopf.eodc.eu/
           username: ${{ secrets.HARBOR_ROBOT_USER }}
           password: ${{ secrets.HARBOR_ROBOT_PWD }}
-      
-
-      - run: ./
 
 
       # Build and push image
