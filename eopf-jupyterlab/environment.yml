@@ -1,0 +1,14 @@
+name: jupyterlab-default-latest
+dependencies:
+  - jupyterhub-singleuser
+  - jupyterlab
+  - nbclassic
+  - xarray
+  - dask-gateway
+  - xarray-eopf
+  - netCDF4
+  - bottleneck
+  - zarr
+  - fsspec
+  - gdal
+  - nbgitpuller
