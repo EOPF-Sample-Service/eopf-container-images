@@ -13,7 +13,7 @@ USER ${NB_UID}
 COPY conda-lock.yml /tmp/conda-lock.yml
 
 RUN mamba create -y -n eopf-base -f /tmp/conda-lock.yml \
-    && micromamba clean --all --yes \
+    && mamba clean --all --yes \
     && find /opt/conda/ -type f,l -name '*.a' -delete \
     && find /opt/conda/ -type f,l -name '*.pyc' -delete \
     && find /opt/conda/ -type f,l -name '*.js.map' -delete \
