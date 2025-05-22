@@ -3,12 +3,22 @@ dependencies:
   - jupyterhub-singleuser
   - jupyterlab
   - nbclassic
-  - xarray
   - dask-gateway
   - xarray-eopf
   - netCDF4
-  - bottleneck
   - zarr
   - fsspec
   - gdal
   - nbgitpuller
+  - xarray=2024.11.0
+  - folium
+  - graphviz
+  - mapclassify
+  - matplotlib=3.10.0
+  - matplotlib-inline=0.1.7
+  - bottleneck=1.4.2
+  - numpy=1.26.4
+  - mystmd
+  - cartopy
+  - jupyterlab-myst
+  - python-graphviz
