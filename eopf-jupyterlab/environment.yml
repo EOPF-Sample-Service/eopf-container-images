@@ -22,3 +22,6 @@ dependencies:
   - cartopy
   - jupyterlab-myst
   - python-graphviz
+  - geopandas
+  - ipyleaflet
+  - shapely
