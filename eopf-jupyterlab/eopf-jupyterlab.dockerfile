@@ -13,7 +13,7 @@ USER ${NB_UID}
 COPY conda-lock.yml /tmp/conda-lock.yml
 
 
-RUN micromamba install -y -n base --file /tmp/conda-lock.yml \
+RUN mamba install -y -n base --file /tmp/conda-lock.yml \
     && mamba clean --all --yes \
     && find /opt/conda/ -type f,l -name '*.a' -delete \
     && find /opt/conda/ -type f,l -name '*.pyc' -delete \
