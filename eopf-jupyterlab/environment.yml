@@ -1,5 +1,7 @@
 name: jupyterlab-default-latest
 dependencies:
+  - pip
+  - conda
   - jupyterhub-singleuser
   - jupyterlab
   - nbclassic
