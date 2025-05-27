@@ -2,8 +2,15 @@ name: jupyterlab-default-latest
 dependencies:
   - pip
   - conda
+  - nomkl
+  - cytoolz
+  - lz4
+  - ipywidgets
+  - cachey
+  - streamz
   - jupyterhub-singleuser
   - jupyterlab
+  - dask-labextension>=5
   - nbclassic
   - dask-gateway
   - xarray-eopf
