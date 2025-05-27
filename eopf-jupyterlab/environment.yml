@@ -25,3 +25,4 @@ dependencies:
   - geopandas
   - ipyleaflet
   - shapely
+  - pystac_client
