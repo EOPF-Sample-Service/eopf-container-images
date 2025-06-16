@@ -13,7 +13,7 @@ dependencies:
   - dask-labextension>=5
   - nbclassic
   - dask-gateway
-  - xarray-eopf
+  - xarray-eopf=0.1.1
   - netCDF4
   - zarr
   - fsspec
@@ -35,3 +35,4 @@ dependencies:
   - ipyleaflet
   - shapely
   - pystac-client
+  - xcube-eopf=0.1.0
