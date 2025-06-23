@@ -35,4 +35,4 @@ dependencies:
   - ipyleaflet
   - shapely
   - pystac-client
-  - xcube-eopf=0.1.0
+  - xcube-eopf=0.1.1
