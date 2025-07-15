@@ -5,8 +5,8 @@ USER root
 RUN apt-get update && \
     apt-get install -y \
     s3fs \
-    s3cmd && \
-    openssh-client  && \
+    s3cmd \
+    openssh-client && \
     apt-get clean -y
 
 USER ${NB_UID}
