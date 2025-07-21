@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  eopf-zarr-driver:
+    build:
+      context: .
+      dockerfile: eopf-zarr-driver.dockerfile
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./data:/home/jupyter/work/data:ro
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - GDAL_DRIVER_PATH=/opt/eopf-zarr/drivers
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/lab"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
