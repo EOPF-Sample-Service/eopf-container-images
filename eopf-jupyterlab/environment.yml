@@ -37,3 +37,6 @@ dependencies:
   - pystac-client
   - xcube-eopf=0.1.1
   - nbgitpuller=1.2.2
+  - scikit-image
+  - hvplot
+  - datashader
