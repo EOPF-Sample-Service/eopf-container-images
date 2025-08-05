@@ -39,3 +39,5 @@ dependencies:
   - scikit-image
   - hvplot
   - datashader
+  - nbgitpuller
+  
