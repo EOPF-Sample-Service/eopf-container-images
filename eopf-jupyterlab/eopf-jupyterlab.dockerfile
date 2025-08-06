@@ -22,8 +22,7 @@ RUN mamba install -y -n base --file /tmp/conda-lock.yml \
     && find /opt/conda/lib/python*/site-packages/bokeh/server/static -type f,l -name '*.js' -not -name '*.min.js' -delete \
     && rm -rf /opt/conda/pkgs \
     && fix-permissions "${CONDA_DIR}"  \
-    && fix-permissions "/home/${NB_USER}" \
-    && fix-permissions "/home/${NB_USER}/.config"
+    && fix-permissions "/home/${NB_USER}"
 
 USER root
 RUN fix-permissions /etc/jupyter/
