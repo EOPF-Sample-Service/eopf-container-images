@@ -170,10 +170,10 @@ jobs:
       run: |
         cd eopf-zarr-driver
         # Test if docker-compose file is valid
-        docker-compose -f docker-compose.yml config
+        docker compose -f docker-compose.yml config
         
         # Test services can be started (without actually running them)
-        docker-compose -f docker-compose.yml pull || echo "Pull completed"
+        docker compose -f docker-compose.yml pull || echo "Pull completed"
 
   security-scan:
     runs-on: ubuntu-latest
