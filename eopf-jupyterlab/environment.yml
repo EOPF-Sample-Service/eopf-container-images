@@ -40,4 +40,5 @@ dependencies:
   - hvplot
   - datashader
   - nbgitpuller
+  - pystac-client
   
