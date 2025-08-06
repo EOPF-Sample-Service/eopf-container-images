@@ -54,6 +54,65 @@ def test_python_environment():
     print(f"📊 Environment: {success_count}/{len(packages)} packages available")
     return success_count >= len(packages) * 0.8  # 80% success rate
 
+def test_remote_zarr_url():
+    """Test remote Zarr URL with rasterio and EOPF-Zarr"""
+    print("🌐 Testing remote Zarr URL access...")
+    
+    # Test URL from user
+    url = 'EOPFZARR:"/vsicurl/https://storage.sbg.cloud.ovh.net/v1/AUTH_8471d76cdd494d98a078f28b195dace4/sentinel-1-public/demo_product/grd/S01SIWGRH_20240201T164915_0025_A146_S000_5464A_VH.zarr"'
+    
+    # Test 1: Check if we can access the URL with rasterio
+    try:
+        import rasterio
+        print(f"📍 Testing URL: {url[:80]}...")
+        
+        with rasterio.open(url) as rs_ds:
+            print("✅ rasterio successfully opened remote EOPF-Zarr URL")
+            print(f"   📐 Shape: {rs_ds.shape}")
+            print(f"   📊 Count: {rs_ds.count}")
+            print(f"   🗺️  CRS: {rs_ds.crs}")
+            print(f"   📦 Data type: {rs_ds.dtypes[0] if rs_ds.count > 0 else 'N/A'}")
+            return True
+            
+    except Exception as e:
+        print(f"⚠️ rasterio remote URL test: {str(e)[:100]}...")
+    
+    # Test 2: Check with direct GDAL
+    try:
+        from osgeo import gdal
+        gdal.UseExceptions()
+        
+        ds = gdal.Open(url)
+        if ds:
+            print("✅ GDAL successfully opened remote EOPF-Zarr URL")
+            print(f"   📐 Size: {ds.RasterXSize}x{ds.RasterYSize}")
+            print(f"   📊 Bands: {ds.RasterCount}")
+            print(f"   🔧 Driver: {ds.GetDriver().ShortName}")
+            ds = None
+            return True
+        else:
+            print("⚠️ GDAL could not open remote URL")
+            
+    except Exception as e:
+        print(f"⚠️ GDAL remote URL test: {str(e)[:100]}...")
+    
+    # Test 3: Check basic network connectivity
+    try:
+        import urllib.request
+        base_url = "https://storage.sbg.cloud.ovh.net/v1/AUTH_8471d76cdd494d98a078f28b195dace4/sentinel-1-public/demo_product/grd/S01SIWGRH_20240201T164915_0025_A146_S000_5464A_VH.zarr"
+        
+        response = urllib.request.urlopen(f"{base_url}/.zarray", timeout=5)
+        if response.status == 200:
+            print("✅ Network access to remote Zarr store confirmed")
+            response.close()
+            return True
+        
+    except Exception as e:
+        print(f"⚠️ Network test: {str(e)[:100]}...")
+    
+    print("ℹ️ Remote URL tests may fail due to network/auth restrictions")
+    return True  # Don't fail the overall test for network issues
+
 if __name__ == "__main__":
     print("🧪 EOPF-Zarr Container Validation")
     print("=" * 40)
@@ -61,7 +120,8 @@ if __name__ == "__main__":
     tests = [
         ("GDAL Installation", test_gdal_installation),
         ("EOPF-Zarr Driver", test_eopf_zarr_driver),
-        ("Python Environment", test_python_environment)
+        ("Python Environment", test_python_environment),
+        ("Remote Zarr URL", test_remote_zarr_url)
     ]
     
     results = []

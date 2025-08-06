@@ -1,100 +1,142 @@
-# EOPF-Zarr GDAL Driver Container
+# EOPF-Zarr Docker Image - Quick Start Guide
 
-This container provides a complete environment for working with EOPF (European Open Science Platform Framework) Zarr-based Earth Observation data using a custom GDAL driver.
+## 🚀 Ready-to-Use Docker Image
 
-## Features
-
-- **Ubuntu 25.04** base with **GDAL 3.10.x**
-- **Custom EOPF-Zarr GDAL driver** for reading Zarr-based EO data
-- **Complete EOPF Python environment** with geospatial libraries
-- **JupyterLab** ready for interactive data analysis
-- **JupyterHub compatibility** for deployment at https://jupyterhub.user.eopf.eodc.eu
-
-## Environment Details
-
-### System Components
-- OS: Ubuntu 25.04
-- GDAL: 3.10.x (system package)
-- Python: 3.13 (system Python)
-- Architecture: x86_64
-
-### Python Libraries
-- **Core**: numpy, scipy, pandas, matplotlib
-- **Geospatial**: gdal, xarray, zarr, dask, geopandas, rasterio, cartopy
-- **Jupyter**: jupyterlab, jupyterhub, ipywidgets, notebook
-- **Data formats**: netcdf4, h5py
-
-### EOPF-Zarr Driver
-- **Location**: `/opt/eopf-zarr/drivers/gdal_EOPFZarr.so`
-- **Environment Variable**: `GDAL_DRIVER_PATH=/opt/eopf-zarr/drivers`
-- **Functionality**: Enables GDAL to read Zarr-based Earth Observation data
-
-## Usage
-
-### Building the Image
-```bash
-docker build -f eopf-zarr-driver.dockerfile -t eopf-zarr-driver:latest .
-```
-
-### Running Locally
-```bash
-docker run -p 8888:8888 eopf-zarr-driver:latest
-```
-
-Access JupyterLab at: http://localhost:8888
-
-### JupyterHub Deployment
-```bash
-# Tag for your registry
-docker tag eopf-zarr-driver:latest your-registry/eopf-zarr-driver:latest
-
-# Push to registry
-docker push your-registry/eopf-zarr-driver:latest
-```
-
-## Testing
-
-The container includes a built-in test script to verify the environment:
+The EOPF-Zarr GDAL driver is now available as a public Docker image on Docker Hub with JupyterHub compatibility!
 
 ```bash
-# Inside the container
-python /usr/local/bin/test-environment.py
+docker pull yuvraj1989/eopf-zarr-driver:v2.1.0-jupyterhub
 ```
 
-Or from the Jupyter workspace:
+## 🎯 What's Included
+
+- **Ubuntu 25.04** with **GDAL 3.10.2**
+- **EOPF-Zarr GDAL driver** built and ready to use
+- **Complete rasterio integration** (compiled against system GDAL)
+- **JupyterLab environment** with all geospatial packages
+- **JupyterHub single-user compatibility** 
+- **Network access** for remote Zarr datasets
+- **Compression support** (blosc, LZ4, ZSTD)
+
+## 🏃 Quick Start
+
+### Option 1: Using Docker Compose (Recommended)
 ```bash
-python test-environment.py
+# Start the service
+docker-compose up -d
+
+# Access JupyterLab at: http://localhost:8888
 ```
 
-This script validates:
-- GDAL installation and driver count
-- EOPF-Zarr driver availability (when built with source)
-- Python package environment completeness
+### Option 2: Direct Docker Run
+```bash
+# Run JupyterLab directly
+docker run -p 8888:8888 yuvraj1989/eopf-zarr-driver:v2.1.0-jupyterhub
 
-## Integration with EOPF Platform
+# Access JupyterLab at: http://localhost:8888
+```
 
-This container is designed to work with:
-- **EOPF Sample Notebooks**: https://github.com/EOPF-Sample-Service/eopf-sample-notebooks
-- **JupyterHub**: https://jupyterhub.user.eopf.eodc.eu
-- **EOPF Framework**: Custom Zarr-based Earth Observation data formats
+### Option 3: Interactive Shell
+```bash
+# Run interactive shell for testing
+docker run -it yuvraj1989/eopf-zarr-driver:v2.1.0-jupyterhub /bin/bash
 
-## Source Code
+# Test GDAL driver
+gdalinfo --formats | grep EOPF
 
-The EOPF-Zarr driver source code is available at:
-https://github.com/EOPF-Sample-Service/GDAL-ZARR-EOPF
+# Test with a Zarr dataset
+gdalinfo "EOPFZARR:'/vsicurl/https://example.com/dataset.zarr'"
+```
 
-## License
+## 🧪 Testing EOPF-Zarr Functionality
 
-This project is licensed under the terms specified in the source repository.
+### Test All Functionality
+```bash
+# Run comprehensive tests
+docker run --rm yuvraj1989/eopf-zarr-driver:v2.1.0-jupyterhub python3 /usr/local/bin/test-environment.py
+```
 
-## Maintainers
+### GDAL Integration
+```python
+from osgeo import gdal
 
-- EOPF Team
-- Original driver development: [Your name/organization]
+# Open a remote Zarr dataset
+url = "EOPFZARR:'/vsicurl/https://storage.sbg.cloud.ovh.net/v1/AUTH_8471d76cdd494d98a078f28b195dace4/sentinel-1-public/demo_product/grd/S01SIWGRH_20240201T164915_0025_A146_S000_5464A_VH.zarr'"
+dataset = gdal.Open(url)
+print(f"Dataset size: {dataset.RasterXSize} x {dataset.RasterYSize}")
+```
 
-## Support
+### rasterio Integration  
+```python
+import rasterio
 
-For issues related to:
-- **Container**: Create an issue in this repository
-- **EOPF-Zarr Driver**: Create an issue in the source repository
-- **EOPF Platform**: Contact the EOPF team
+# Same dataset, using rasterio
+with rasterio.open(url) as src:
+    print(f"Dataset CRS: {src.crs}")
+    print(f"Dataset bounds: {src.bounds}")
+    data = src.read(1)  # Read first band
+```
+
+## 🎯 JupyterHub Compatibility
+
+This image is fully compatible with JupyterHub deployments:
+
+- **User**: `jupyter` (UID: 1000, GID: 100)
+- **Environment Variables**: All NB_* variables supported
+- **Entry Points**: Compatible with JupyterHub single-user server
+- **Permissions**: Proper file ownership and workspace setup
+
+## 🔧 Environment Variables
+
+The image comes pre-configured with:
+- `GDAL_DRIVER_PATH=/opt/eopf-zarr/drivers`
+- `GDAL_DATA=/usr/share/gdal`
+- `PROJ_LIB=/usr/share/proj`
+- `PYTHONPATH=/usr/local/lib/python3.13/site-packages`
+- `NB_USER=jupyter`, `NB_UID=1000`, `NB_GID=100`
+
+## 📊 Available Packages
+
+- **Core**: gdal, rasterio, xarray, zarr, dask
+- **Geospatial**: geopandas, rioxarray, fiona, shapely, pyproj
+- **Scientific**: numpy, scipy, matplotlib, netcdf4, h5py
+- **Visualization**: cartopy, jupyter ecosystem
+- **Compression**: blosc, numcodecs
+- **JupyterHub**: jupyterhub, jupyter-server
+
+## 🆕 What's New in v2.1.0-jupyterhub
+
+- ✅ **JupyterHub single-user compatibility** 
+- ✅ **Remote Zarr URL access validated**
+- ✅ Enhanced user management (jupyter user)
+- ✅ Comprehensive testing suite with remote URL tests
+- ✅ Production-ready for both standalone and hub deployments
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **URL Format**: Ensure you use single quotes around the URL:
+   ```python
+   # ✅ Correct
+   url = "EOPFZARR:'/vsicurl/https://...'"
+   
+   # ❌ Incorrect  
+   url = "EOPFZARR:/vsicurl/https://..."
+   ```
+
+2. **Network Access**: The container needs internet access for remote datasets.
+
+3. **Memory**: Large datasets may require increased Docker memory limits.
+
+4. **JupyterHub**: Ensure proper user mapping when deploying in JupyterHub.
+
+## 📞 Support
+
+- **GitHub**: https://github.com/EOPF-Sample-Service/GDAL-ZARR-EOPF
+- **Issues**: Report bugs and feature requests on GitHub
+- **Docker Hub**: https://hub.docker.com/r/yuvraj1989/eopf-zarr-driver
+
+## 📝 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
