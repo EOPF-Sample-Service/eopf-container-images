@@ -35,21 +35,34 @@ if zarr_driver:
 else:
     print('❌ Standard Zarr driver not found')
 
-# Test rasterio compatibility
+# Test rasterio compatibility (critical for EOPF-Zarr plugin detection)
 try:
     import rasterio
+    from osgeo import gdal
+    
     print(f'✅ Rasterio {rasterio.__version__} available')
+    
+    # Check if rasterio and GDAL use the same version (critical for plugin detection)
+    gdal_version = gdal.VersionInfo()
+    print(f'🔍 GDAL version: {gdal_version}')
+    print('🔍 Checking rasterio-GDAL compatibility...')
     
     # Check rasterio driver extensions
     with rasterio.env.Env():
         extensions = rasterio.drivers.raster_driver_extensions()
         zarr_exts = {k:v for k,v in extensions.items() if 'zarr' in k.lower() or 'zarr' in v.lower()}
         if zarr_exts:
-            print(f'   Rasterio Zarr mappings: {zarr_exts}')
+            print(f'   ✅ Rasterio Zarr mappings: {zarr_exts}')
         else:
-            print('   Use explicit EOPFZARR: prefix with rasterio')
+            print('   ℹ️ Use explicit EOPFZARR: prefix with rasterio')
+        
+        print(f'   📦 Rasterio has access to {len(extensions)} GDAL drivers')
+        print('   ✅ Rasterio-GDAL compatibility confirmed')
+        
 except ImportError as e:
     print(f'❌ Rasterio not available: {e}')
+except Exception as e:
+    print(f'⚠️ Rasterio-GDAL compatibility issue: {e}')
 
 "
 

@@ -30,7 +30,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./eopf-zarr-driver
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: harbor.user.eopf.eodc.eu/jupyterdask/eopf-zarr-driver:latest
           file: eopf-zarr-driver/Dockerfile

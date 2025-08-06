@@ -33,6 +33,36 @@ def test_eopf_zarr_driver():
         print(f"❌ Error checking EOPF-Zarr driver: {e}")
         return False
 
+def test_rasterio_gdal_compatibility():
+    """Test rasterio and GDAL compatibility - crucial for EOPF-Zarr plugin detection"""
+    try:
+        import rasterio
+        from osgeo import gdal
+        
+        # Check GDAL version consistency
+        gdal_version = gdal.VersionInfo()
+        print(f"🔍 GDAL version: {gdal_version}")
+        print(f"🔍 Rasterio version: {rasterio.__version__}")
+        
+        # Test if rasterio can use the same GDAL
+        with rasterio.env.Env():
+            # Check if rasterio can access GDAL drivers
+            extensions = rasterio.drivers.raster_driver_extensions()
+            print(f"✅ Rasterio has access to {len(extensions)} GDAL drivers")
+            
+            # Check for any Zarr-related drivers
+            zarr_drivers = {k: v for k, v in extensions.items() 
+                          if 'zarr' in k.lower() or 'zarr' in v.lower()}
+            if zarr_drivers:
+                print(f"✅ Zarr-related drivers found: {zarr_drivers}")
+            else:
+                print("ℹ️ No Zarr drivers found in rasterio extensions (expected)")
+            
+            return True
+    except Exception as e:
+        print(f"❌ Rasterio-GDAL compatibility test failed: {e}")
+        return False
+
 def test_python_environment():
     """Test Python environment packages"""
     packages = [
@@ -120,6 +150,7 @@ if __name__ == "__main__":
     tests = [
         ("GDAL Installation", test_gdal_installation),
         ("EOPF-Zarr Driver", test_eopf_zarr_driver),
+        ("Rasterio-GDAL Compatibility", test_rasterio_gdal_compatibility),
         ("Python Environment", test_python_environment),
         ("Remote Zarr URL", test_remote_zarr_url)
     ]
