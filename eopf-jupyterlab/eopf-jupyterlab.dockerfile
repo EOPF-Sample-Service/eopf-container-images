@@ -12,7 +12,7 @@ RUN apt-get update && \
 USER ${NB_UID}
 
 COPY conda-lock.yml /tmp/conda-lock.yml
-COPY gateway.yml "/home/${NB_USER}/.config/dask/gateway.yaml"
+COPY eopf-jupyterlab/gateway.yml "/home/${NB_USER}/.config/dask/gateway.yaml"
 
 RUN mamba install -y -n base --file /tmp/conda-lock.yml \
     && mamba clean --all --yes \
