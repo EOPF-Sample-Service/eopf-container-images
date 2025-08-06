@@ -12,6 +12,7 @@ RUN apt-get update && \
 USER ${NB_UID}
 
 COPY conda-lock.yml /tmp/conda-lock.yml
+COPY gateway.yml "/home/${NB_USER}/.config/dask/gateway.yaml"
 
 RUN mamba install -y -n base --file /tmp/conda-lock.yml \
     && mamba clean --all --yes \
@@ -21,7 +22,8 @@ RUN mamba install -y -n base --file /tmp/conda-lock.yml \
     && find /opt/conda/lib/python*/site-packages/bokeh/server/static -type f,l -name '*.js' -not -name '*.min.js' -delete \
     && rm -rf /opt/conda/pkgs \
     && fix-permissions "${CONDA_DIR}"  \
-    && fix-permissions "/home/${NB_USER}"
+    && fix-permissions "/home/${NB_USER}" \
+    && fix-permissions "/home/${NB_USER}/.config"
 
 USER root
 RUN fix-permissions /etc/jupyter/

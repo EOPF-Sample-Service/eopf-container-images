@@ -1,0 +1,10 @@
+# ~/.config/dask/gateway.yaml
+gateway:
+  # The full address to the dask-gateway server.
+  address: https://dask.user.eopf.eodc.eu
+
+  # The full address to the dask-gateway scheduler proxy
+  proxy-address: tls://dask.user.eopf.eodc.eu:10000
+
+  auth:
+    type: jupyterhub
