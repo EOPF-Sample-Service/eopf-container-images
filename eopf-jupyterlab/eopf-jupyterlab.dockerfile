@@ -20,12 +20,12 @@ RUN mamba install -y -n base --file /tmp/conda-lock.yml \
     && find /opt/conda/ -type f,l -name '*.pyc' -delete \
     && find /opt/conda/ -type f,l -name '*.js.map' -delete \
     && find /opt/conda/lib/python*/site-packages/bokeh/server/static -type f,l -name '*.js' -not -name '*.min.js' -delete \
-    && rm -rf /opt/conda/pkgs \
-    && fix-permissions "${CONDA_DIR}"  \
-    && fix-permissions "/home/${NB_USER}"
+    && rm -rf /opt/conda/pkgs
 
 USER root
-RUN fix-permissions /etc/jupyter/
+RUN fix-permissions /etc/jupyter/ \
+    && fix-permissions "${CONDA_DIR}"  \
+    && fix-permissions "/home/${NB_USER}"
 
 RUN rm -rf "/home/${NB_USER}/.cache/"
 
