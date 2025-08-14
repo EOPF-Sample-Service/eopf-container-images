@@ -12,6 +12,7 @@ dependencies:
   - jupyterlab
   - dask-labextension>=5
   - nbclassic
+  - dask
   - dask-gateway
   - xarray-eopf=0.1.1
   - netCDF4
