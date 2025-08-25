@@ -1,188 +1,57 @@
-# EOPF-Zarr GDAL Driver - Docker Image
-# Based on Ubuntu 25 with GDAL 3.10 and EOPF Python environment
-FROM ubuntu:25.04
+# EOPF-Zarr GDAL Driver - Simplified Docker Image
+# Based on Jupyter minimal-notebook for JupyterHub compatibility
+ARG REGISTRY=quay.io
+ARG OWNER=jupyter
+ARG BASE_IMAGE=$REGISTRY/$OWNER/minimal-notebook
+FROM $BASE_IMAGE
 
 LABEL maintainer="EOPF Sample Service"
-LABEL description="EOPF-Zarr GDAL Driver with Ubuntu 25, GDAL 3.10, EOPF Python environment, and JupyterHub compatibility"
-LABEL version="2.1.0"
+LABEL description="EOPF-Zarr GDAL Driver with Jupyter base, GDAL, and EOPF Python environment"
+LABEL version="3.0.0"
 
-# Set environment variables
-ENV DEBIAN_FRONTEND=noninteractive
-ENV PYTHONPATH=/usr/local/lib/python3.13/site-packages
-ENV GDAL_DRIVER_PATH=/opt/eopf-zarr/drivers
-ENV GDAL_DATA=/usr/share/gdal
-ENV PROJ_LIB=/usr/share/proj
+USER root
 
-# Install system dependencies
+# Install GDAL and system dependencies
 RUN apt-get update && apt-get install -y \
-    # Build tools
-    build-essential \
-    cmake \
-    pkg-config \
-    git \
-    wget \
-    curl \
-    # GDAL and geospatial libraries
     gdal-bin \
     libgdal-dev \
-    libproj-dev \
-    libgeos-dev \
-    # Python development
-    python3 \
-    python3-dev \
-    python3-pip \
-    # Additional utilities
-    vim \
-    htop \
+    python3-gdal \
+    git \
+    cmake \
+    build-essential \
+    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
-# Verify GDAL version (should be 3.10.x on Ubuntu 25)
-RUN gdalinfo --version
+# Set GDAL driver path
+ENV GDAL_DRIVER_PATH=/opt/eopf-zarr/drivers
 
-# Install compression libraries for Zarr/blosc support
-RUN apt-get update && apt-get install -y \
-    # Compression libraries that rasterio needs
-    libblosc1 \
-    libblosc-dev \
-    python3-blosc \
-    # Additional compression support
-    liblz4-1 \
-    liblz4-dev \
-    libzstd1 \
-    libzstd-dev \
-    && rm -rf /var/lib/apt/lists/*
+# Create driver directory and build EOPF-Zarr driver
+RUN mkdir -p /opt/eopf-zarr/drivers && \
+    git clone --depth 1 https://github.com/EOPF-Sample-Service/GDAL-ZARR-EOPF.git /tmp/eopf-zarr && \
+    cd /tmp/eopf-zarr && \
+    mkdir build && cd build && \
+    cmake .. \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DGDAL_ROOT=/usr && \
+    make -j$(nproc) && \
+    cp gdal_EOPFZarr.so /opt/eopf-zarr/drivers/ && \
+    rm -rf /tmp/eopf-zarr
 
-# Install Python packages using system pip to ensure compatibility with system GDAL
-# CRITICAL: Install rasterio with --no-binary=rasterio to force compilation against system GDAL
-# This ensures rasterio uses the same GDAL version as the EOPF-Zarr plugin, preventing
-# compatibility issues where "rasterio was not able to detect the EOPFZARR plugin"
-RUN python3 -m pip install --no-cache-dir --break-system-packages \
+# Set driver path in environment
+RUN echo 'export GDAL_DRIVER_PATH=/opt/eopf-zarr/drivers' >> /etc/environment
+
+USER $NB_UID
+
+# Install Python packages
+RUN pip install --no-cache-dir \
     GDAL==$(gdal-config --version) \
-    # Install compression codecs FIRST
-    blosc \
-    numcodecs \
-    # Then install geospatial packages
+    --no-binary=rasterio rasterio \
     xarray \
-    zarr==2.18.* \
+    zarr \
     dask \
     geopandas \
-    # IMPORTANT: Install rasterio without binary to force compilation against system GDAL
-    --no-binary=rasterio rasterio \
-    rioxarray \
     fiona \
     shapely \
-    pyproj \
-    netcdf4 \
-    h5py \
-    scipy \
     matplotlib \
-    cartopy \
-    ipykernel \
-    ipywidgets \
-    jupyterlab \
-    notebook
-
-# Create directories for EOPF-Zarr driver
-RUN mkdir -p /opt/eopf-zarr/drivers
-
-# Download and install pre-built EOPF-Zarr driver instead of building from source
-# This approach is much faster and ensures compatibility
-WORKDIR /opt/eopf-zarr
-
-# Method 1: Try to download pre-built plugin from releases (if available)
-# If not available, we'll build a minimal version
-RUN echo "🚀 Installing EOPF-Zarr driver..." && \
-    # Check if we can download pre-built plugin from Docker Hub image
-    # If not available, clone source for minimal build
-    git clone --depth 1 https://github.com/EOPF-Sample-Service/GDAL-ZARR-EOPF.git temp_source && \
-    echo "📦 Building EOPF-Zarr driver (minimal build)..." && \
-    mkdir -p build && cd build && \
-    cmake ../temp_source \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DGDAL_ROOT=/usr \
-        -DGDAL_INCLUDE_DIR=/usr/include/gdal \
-        -DGDAL_LIBRARY=/usr/lib/x86_64-linux-gnu/libgdal.so && \
-    make -j$(nproc) gdal_EOPFZarr && \
-    cp gdal_EOPFZarr.so /opt/eopf-zarr/drivers/ && \
-    echo "✅ Driver installed successfully:" && \
-    ls -la /opt/eopf-zarr/drivers/ && \
-    # Clean up to reduce image size
-    cd /opt/eopf-zarr && rm -rf temp_source build
-
-# Verify driver installation
-RUN ls -la /opt/eopf-zarr/drivers/ \
-    && echo "GDAL_DRIVER_PATH=/opt/eopf-zarr/drivers" >> /etc/environment
-
-# Install JupyterHub and single-user server components for compatibility
-RUN python3 -m pip install --no-cache-dir --break-system-packages \
-    jupyterhub \
-    notebook \
-    jupyterlab \
-    ipywidgets \
-    jupyter-server \
-    jupyter-lsp
-
-# Set up JupyterHub single-user environment variables
-ENV NB_USER=jupyter
-ENV NB_UID=1000
-ENV NB_GID=100
-ENV HOME=/home/jupyter
-ENV SHELL=/bin/bash
-
-# Create a non-root user compatible with JupyterHub single-user setup
-RUN groupadd -f -g ${NB_GID} ${NB_USER} 2>/dev/null || true && \
-    if id "${NB_USER}" 2>/dev/null; then \
-        echo "User ${NB_USER} exists, modifying..."; \
-        usermod -u ${NB_UID} -g ${NB_GID} -d /home/${NB_USER} -s ${SHELL} ${NB_USER}; \
-    elif id "${NB_UID}" 2>/dev/null; then \
-        echo "UID ${NB_UID} exists, recreating user..."; \
-        existing_user=$(id -nu ${NB_UID}); \
-        userdel ${existing_user}; \
-        useradd -m -s ${SHELL} -u ${NB_UID} -g ${NB_GID} ${NB_USER}; \
-    else \
-        echo "Creating new user ${NB_USER}..."; \
-        useradd -m -s ${SHELL} -u ${NB_UID} -g ${NB_GID} ${NB_USER}; \
-    fi && \
-    mkdir -p /home/${NB_USER} && \
-    chown -R ${NB_USER}:${NB_GID} /home/${NB_USER} && \
-    echo "${NB_USER}:${NB_USER}" | chpasswd
-
-# Create jupyter workspace directory with proper permissions
-RUN mkdir -p /home/jupyter/work \
-    && chown -R ${NB_USER}:${NB_GID} /home/jupyter
-
-# Set up environment for EOPF-Zarr driver for the jupyter user
-RUN echo 'export GDAL_DRIVER_PATH=/opt/eopf-zarr/drivers' >> /home/jupyter/.bashrc \
-    && echo 'export PYTHONPATH=/usr/local/lib/python3.13/site-packages:$PYTHONPATH' >> /home/jupyter/.bashrc
-
-# Copy docker entrypoint and test scripts (these will be in the Docker repo)
-COPY docker-entrypoint.sh /usr/local/bin/
-COPY test-environment.py /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
-    && chmod +x /usr/local/bin/test-environment.py
-
-# Create test notebooks directory and copy example notebooks
-RUN mkdir -p /home/jupyter/work/notebooks
-
-# Copy example notebooks from Docker repo (not main repo)
-COPY notebooks/ /home/jupyter/work/notebooks/
-
-# Fix ownership for JupyterHub compatibility
-RUN chown -R ${NB_USER}:${NB_GID} /home/jupyter/work/
-
-# Add JupyterHub single-user entry points
-RUN mkdir -p /usr/local/bin \
-    && echo '#!/bin/bash' > /usr/local/bin/start-singleuser.sh \
-    && echo 'source /home/jupyter/.bashrc' >> /usr/local/bin/start-singleuser.sh \
-    && echo 'exec "$@"' >> /usr/local/bin/start-singleuser.sh \
-    && chmod +x /usr/local/bin/start-singleuser.sh
-
-# Switch to non-root user for JupyterHub compatibility
-USER ${NB_USER}
-WORKDIR ${HOME}
-
-# Expose JupyterLab port
-EXPOSE 8888
-
-# Default command
-CMD ["/usr/local/bin/docker-entrypoint.sh"]
+    netcdf4 \
+    h5py
