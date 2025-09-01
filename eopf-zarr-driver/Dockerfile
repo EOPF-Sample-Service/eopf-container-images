@@ -24,6 +24,7 @@ USER $NB_UID
 # This provides proper gdal_array integration for ReadAsArray functionality
 RUN mamba install -y -c conda-forge \
     'gdal>=3.10,<3.11' \
+    rasterio \
     xarray \
     zarr \
     matplotlib \
