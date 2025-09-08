@@ -124,5 +124,5 @@ jobs:
           push: true
           tags: |
             yuvraj1989/eopf-zarr-driver:latest
-            yuvraj1989/eopf-zarr-driver:v4.0-optimized
+            yuvraj1989/eopf-zarr-driver:v4.2-updated
           file: eopf-zarr-driver/Dockerfile
