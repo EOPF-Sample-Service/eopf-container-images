@@ -1,6 +1,6 @@
-ARG REGISTRY=quay.io
-ARG OWNER=jupyter
-ARG BASE_IMAGE=$REGISTRY/$OWNER/minimal-notebook
+ARG REGISTRY=harbor.user.eopf.eodc.eu
+ARG OWNER=jupyterdask
+ARG BASE_IMAGE=$REGISTRY/$OWNER/julia-base
 FROM $BASE_IMAGE
 
 LABEL maintainer="EODC for EOPF Project <support@eodc.eu>"
@@ -28,23 +28,7 @@ RUN mamba install -y -n base --file /tmp/conda-lock.yml \
     && find /opt/conda/ -type f,l -name '*.js.map' -delete \
     && rm -rf /opt/conda/pkgs
 
-# Julia dependencies
-# install Julia packages in /opt/julia instead of ${HOME}
-ENV JULIA_DEPOT_PATH=/opt/julia \
-    JULIA_PKGDIR=/opt/julia
-
-# Setup Julia
-RUN /opt/setup-scripts/setup_julia.py
-
-RUN rm -rf "/home/${NB_USER}/.cache/"
-
-RUN fix-permissions /etc/jupyter/ \
-    && fix-permissions "${CONDA_DIR}"  \
-    && fix-permissions "/home/${NB_USER}"
-
-# Setup IJulia kernel & other packages
-RUN /opt/setup-scripts/setup-julia-packages.bash
-
+    
 USER ${NB_UID}
 
 WORKDIR "${HOME}"
