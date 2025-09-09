@@ -2,7 +2,7 @@
 # Fixes: ReadAsArray "_gdal_array import error" and EOPF plugin compatibility  
 # Solution: GDAL 3.10.3 (conda) + proper plugin placement
 # Base: Uses dask-notebook which already includes xarray, zarr, dask, matplotlib
-FROM ghcr.io/dask/dask-notebook:2025.5.0-py3.11
+FROM ghcr.io/dask/dask-notebook:latest
 
 LABEL maintainer="EOPF Sample Service"
 LABEL description="EOPF-Zarr GDAL Driver with working ReadAsArray and EOPF plugin functionality"
