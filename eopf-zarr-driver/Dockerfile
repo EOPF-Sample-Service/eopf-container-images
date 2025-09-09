@@ -28,6 +28,7 @@ RUN mamba install -y -c conda-forge \
     xarray \
     zarr \
     matplotlib \
+    jupyterhub-singleuser \
     && mamba clean --all -f -y
 
 # Verify GDAL version is in the working range (matches Windows success criteria)
