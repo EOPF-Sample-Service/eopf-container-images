@@ -1,4 +1,4 @@
-name: Build EOPF container (jupyterlab image)
+name: Build EOPF container (julia base)
 
 on: workflow_dispatch
 
