@@ -123,5 +123,5 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: yuvraj1989/eopf-zarr-driver:latest
+          tags: harbor.user.eopf.eodc.eu/jupyterdask/eopf-zarr-driver:latest
           file: eopf-zarr-driver/Dockerfile
