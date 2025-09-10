@@ -46,5 +46,4 @@ dependencies:
   - openeo>=0.44.0
   - xcube-stac
   - libgdal-jp2openjpeg
-  - xet
   
