@@ -38,7 +38,7 @@ jobs:
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          push: true
+          push: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
           tags: harbor.user.eopf.eodc.eu/jupyterdask/eopf-dask:latest
           file: eopf-dask/eopf-dask.dockerfile
 
@@ -90,7 +90,7 @@ jobs:
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          push: true
+          push: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
           tags: harbor.user.eopf.eodc.eu/jupyterdask/eopf-jupyterlab:latest
           file: eopf-jupyterlab/eopf-jupyterlab.dockerfile
 
@@ -122,6 +122,6 @@ jobs:
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          push: true
+          push: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
           tags: harbor.user.eopf.eodc.eu/jupyterdask/eopf-zarr-driver:latest
           file: eopf-zarr-driver/Dockerfile
