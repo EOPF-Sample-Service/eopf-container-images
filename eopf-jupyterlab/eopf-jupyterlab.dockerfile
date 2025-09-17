@@ -32,7 +32,7 @@ RUN mamba install -y -n base --file /tmp/conda-lock.yml \
 RUN fix-permissions /etc/jupyter/ \
     && fix-permissions "${CONDA_DIR}"  \
     && fix-permissions "/home/${NB_USER}"
-
+ENV OPENEO_CONFIG_HOME /home/jovyan/workspace/
     
 USER ${NB_UID}
 
