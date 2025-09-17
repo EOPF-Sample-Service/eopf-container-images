@@ -28,6 +28,11 @@ RUN mamba install -y -n base --file /tmp/conda-lock.yml \
     && find /opt/conda/ -type f,l -name '*.js.map' -delete \
     && rm -rf /opt/conda/pkgs
 
+
+RUN fix-permissions /etc/jupyter/ \
+    && fix-permissions "${CONDA_DIR}"  \
+    && fix-permissions "/home/${NB_USER}"
+
     
 USER ${NB_UID}
 
