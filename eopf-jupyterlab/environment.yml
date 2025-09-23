@@ -14,7 +14,7 @@ dependencies:
   - nbclassic
   - dask
   - dask-gateway
-  - xarray-eopf=0.1.1
+  - xarray-eopf=0.2.1
   - netCDF4
   - zarr
   - fsspec
@@ -36,7 +36,7 @@ dependencies:
   - ipyleaflet
   - shapely
   - pystac-client
-  - xcube-eopf=0.1.1
+  - xcube-eopf=0.3.0
   - scikit-image
   - hvplot
   - datashader
