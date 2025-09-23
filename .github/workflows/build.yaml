@@ -43,6 +43,9 @@ jobs:
         uses: actions/download-artifact@v5
         with:
           name: conda-lock
+
+      - name: Display structure of downloaded files
+        run: ls -r
           
       - name: Checkout code
         uses: actions/checkout@v4
