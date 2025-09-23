@@ -8,17 +8,9 @@ on:
       - 'eopf-jupyterlab/**'
       - 'eopf-zarr-driver/**'
 
-stages:
-  - lock
-  - build
-
 jobs:
   lock:
-    stage: lock
     runs-on: ubuntu-latest
-    artifacts:
-      paths:
-        - conda-lock.yml
     steps: 
       - name: Set up Micromamba
         uses: mamba-org/setup-micromamba@v1
@@ -39,16 +31,17 @@ jobs:
         with:
           name: conda-lock
           path: conda-lock.yml
-
+        
   build-jupyterlab-image:
-    stage: build
-    needs: lock
+    needs: ["lock"]
     runs-on: ubuntu-latest
-    artifacts:
-      paths:
-        - conda-lock.yml
     steps:
-      # Check out the code from the repository
+      - name: Download lock file
+        uses: actions/download-artifact@v4
+        with:
+          name: conda-lock
+          path: conda-lock.yml
+          
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -79,16 +72,15 @@ jobs:
 
 
   build-dask-image:
-    needs: lock
-    stage: build
+    needs: ["lock"]
     runs-on: ubuntu-latest
-    artifacts:
-      paths:
-        - conda-lock.yml
     steps:
-
-      - 
-      # Check out the code from the repository
+      - name: Download lock file
+        uses: actions/download-artifact@v4
+        with:
+          name: conda-lock
+          path: conda-lock.yml
+          
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -119,7 +111,6 @@ jobs:
 
   build-zarr-driver-image:
     runs-on: ubuntu-latest
-    stage: build
     steps:
       # Check out the code from the repository
       - name: Checkout code
