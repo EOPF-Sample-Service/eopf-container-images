@@ -30,7 +30,7 @@ jobs:
         run: micromamba run -n lockenv conda-lock lock -f eopf-jupyterlab/environment.yml -p linux-64 -c conda-forge
 
       - name: Upload lock file
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: conda-lock
           path: conda-lock.yml
@@ -40,10 +40,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download lock file
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: conda-lock
-          path: conda-lock.yml
+          path: ./conda-lock.yml
           
       - name: Checkout code
         uses: actions/checkout@v4
@@ -79,10 +79,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download lock file
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: conda-lock
-          path: conda-lock.yml
+          path: ./conda-lock.yml
           
       - name: Checkout code
         uses: actions/checkout@v4
