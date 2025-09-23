@@ -39,6 +39,9 @@ jobs:
     needs: ["lock"]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
       - name: Download lock file
         uses: actions/download-artifact@v5
         with:
@@ -46,10 +49,7 @@ jobs:
 
       - name: Display structure of downloaded files
         run: ls -r
-          
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+        
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -80,14 +80,18 @@ jobs:
     needs: ["lock"]
     runs-on: ubuntu-latest
     steps:
+          
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
       - name: Download lock file
         uses: actions/download-artifact@v5
         with:
           name: conda-lock
-          
-      - name: Checkout code
-        uses: actions/checkout@v4
 
+      - name: Display structure of downloaded files
+        run: ls -r
+        
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
