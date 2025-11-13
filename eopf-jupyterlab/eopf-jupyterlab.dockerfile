@@ -14,12 +14,7 @@ USER root
 # Python dependencies
 RUN apt-get update && \
     apt-get install -y \
-    s3fs \
-    s3cmd \
-    libjpeg8 \
-    libtiff6 \
-    libxml2 \
-    libsimdjson-dev && \
+    s3fs && \
     apt-get clean -y
 
 COPY conda-lock.yml /tmp/conda-lock.yml
