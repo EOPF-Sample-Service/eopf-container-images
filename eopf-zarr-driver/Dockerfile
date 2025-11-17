@@ -22,6 +22,7 @@ USER $NB_UID
 
 # CRITICAL: Upgrade to GDAL 3.10.x via conda-forge to fix ReadAsArray
 # This provides proper gdal_array integration for ReadAsArray functionality
+# Added packages from main repo for standalone functionality
 RUN mamba install -y -c conda-forge \
     'gdal>=3.10,<3.11' \
     rasterio \
@@ -29,6 +30,9 @@ RUN mamba install -y -c conda-forge \
     zarr \
     matplotlib \
     jupyterhub-singleuser \
+    nbgitpuller \
+    mystmd \
+    jupyterlab-myst \
     && mamba clean --all -f -y
 
 # Verify GDAL version is in the working range (matches Windows success criteria)
