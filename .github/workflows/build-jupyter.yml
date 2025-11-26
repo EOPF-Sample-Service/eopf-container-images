@@ -45,8 +45,14 @@ jobs:
           registry: https://harbor.user.eopf.eodc.eu/
           username: ${{ secrets.HARBOR_ROBOT_USER }}
           password: ${{ secrets.HARBOR_ROBOT_PWD }}
-
-
+          
+      - name: Setup Docker
+        run: |
+          # Downgrade to Docker 28.0.1 or earlier
+          sudo apt install --allow-downgrades -y \
+            docker-ce=5:28.0.1-1~ubuntu.24.04~noble \
+            docker-ce-cli=5:28.0.1-1~ubuntu.24.04~noble
+            
       # Build and push image
       - name: Build and push
         uses: docker/build-push-action@v6
