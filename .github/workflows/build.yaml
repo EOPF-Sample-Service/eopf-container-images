@@ -34,13 +34,6 @@ jobs:
         with:
           name: conda-lock
           path: conda-lock.yml
-
-      - name: Setup Docker
-        run: |
-          # Downgrade to Docker 28.0.1 or earlier
-          sudo apt install --allow-downgrades -y \
-            docker-ce=5:28.0.1-1~ubuntu.24.04~noble \
-            docker-ce-cli=5:28.0.1-1~ubuntu.24.04~noble
         
   build-jupyterlab-image:
     needs: ["lock"]
