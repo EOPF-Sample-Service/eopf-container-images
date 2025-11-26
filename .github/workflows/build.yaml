@@ -56,6 +56,13 @@ jobs:
       # Make sure buildx is used
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+        
+      - name: Setup Docker
+        run: |
+          # Downgrade to Docker 28.0.1 or earlier
+          sudo apt install --allow-downgrades -y \
+            docker-ce=5:28.0.1-1~ubuntu.24.04~noble \
+            docker-ce-cli=5:28.0.1-1~ubuntu.24.04~noble
 
       # Log in to EOPF Container Registry
       - name: Log in to GitHub Container Registry
