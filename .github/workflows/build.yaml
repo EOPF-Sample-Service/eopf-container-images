@@ -60,7 +60,7 @@ jobs:
           DOCKER_CLIENT_TIMEOUT: 300
           COMPOSE_HTTP_TIMEOUT: 300
         run: |
-          max_attempts=5
+          max_attempts=10
           attempt=1
           
           while [ $attempt -le $max_attempts ]; do
@@ -142,7 +142,7 @@ jobs:
           DOCKER_CLIENT_TIMEOUT: 300
           COMPOSE_HTTP_TIMEOUT: 300
         run: |
-          max_attempts=5
+          max_attempts=10
           attempt=1
           
           while [ $attempt -le $max_attempts ]; do
@@ -184,14 +184,14 @@ jobs:
               --platform linux/amd64,linux/arm64 \
               --push \
               --tag harbor.user.eopf.eodc.eu/jupyterdask/eopf-dask:latest \
-              --file eopf-jupyterlab/eopf-dask.dockerfile \
+              --file eopf-dask/eopf-dask.dockerfile \
               .
           else
             echo "Skipping push - not on main branch or not a push/workflow_dispatch event"
             docker buildx build \
               --platform linux/amd64,linux/arm64 \
               --tag harbor.user.eopf.eodc.eu/jupyterdask/eopf-dask:latest \
-              --file eopf-jupyterlab/eopf-dask.dockerfile \
+              --file eopf-dask/eopf-dask.dockerfile \
               .
           fi
         timeout-minutes: 60
@@ -214,7 +214,7 @@ jobs:
           DOCKER_CLIENT_TIMEOUT: 300
           COMPOSE_HTTP_TIMEOUT: 300
         run: |
-          max_attempts=5
+          max_attempts=10
           attempt=1
           
           while [ $attempt -le $max_attempts ]; do
@@ -256,14 +256,14 @@ jobs:
               --platform linux/amd64,linux/arm64 \
               --push \
               --tag harbor.user.eopf.eodc.eu/jupyterdask/eopf-zarr-driver:latest \
-              --file eopf-jupyterlab/eopf-zarr-driver.dockerfile \
+              --file eopf-zarr-driver/eopf-zarr-driver.dockerfile \
               .
           else
             echo "Skipping push - not on main branch or not a push/workflow_dispatch event"
             docker buildx build \
               --platform linux/amd64,linux/arm64 \
               --tag harbor.user.eopf.eodc.eu/jupyterdask/eopf-zarr-driver:latest \
-              --file eopf-jupyterlab/eopf-zarr-driver.dockerfile \
+              --file eopf-zarr-driver/eopf-zarr-driver.dockerfile \
               .
           fi
         timeout-minutes: 60
