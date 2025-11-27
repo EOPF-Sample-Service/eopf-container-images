@@ -61,7 +61,7 @@ jobs:
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          registry: https://harbor.user.eopf.eodc.eu/
+          registry: harbor.user.eopf.eodc.eu
           username: ${{ secrets.HARBOR_ROBOT_USER }}
           password: ${{ secrets.HARBOR_ROBOT_PWD }}
 
@@ -103,7 +103,7 @@ jobs:
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          registry: https://harbor.user.eopf.eodc.eu/
+          registry: harbor.user.eopf.eodc.eu
           username: ${{ secrets.HARBOR_ROBOT_USER }}
           password: ${{ secrets.HARBOR_ROBOT_PWD }}
 
@@ -135,7 +135,7 @@ jobs:
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          registry: https://harbor.user.eopf.eodc.eu/
+          registry: harbor.user.eopf.eodc.eu
           username: ${{ secrets.HARBOR_ROBOT_USER }}
           password: ${{ secrets.HARBOR_ROBOT_PWD }}
 
