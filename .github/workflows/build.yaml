@@ -256,14 +256,14 @@ jobs:
               --platform linux/amd64,linux/arm64 \
               --push \
               --tag harbor.user.eopf.eodc.eu/jupyterdask/eopf-zarr-driver:latest \
-              --file eopf-zarr-driver/eopf-zarr-driver.dockerfile \
+              --file eopf-zarr-driver/Dockerfile \
               .
           else
             echo "Skipping push - not on main branch or not a push/workflow_dispatch event"
             docker buildx build \
               --platform linux/amd64,linux/arm64 \
               --tag harbor.user.eopf.eodc.eu/jupyterdask/eopf-zarr-driver:latest \
-              --file eopf-zarr-driver/eopf-zarr-driver.dockerfile \
+              --file eopf-zarr-driver/Dockerfile \
               .
           fi
         timeout-minutes: 60
