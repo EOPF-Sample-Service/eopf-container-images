@@ -26,7 +26,6 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 RUN mamba install -y -n base --file /tmp/conda-lock.yml \
-    && mamba clean --all --yes \
     && find /opt/conda/ -type f,l -name '*.a' -delete \
     && find /opt/conda/ -type f,l -name '*.pyc' -delete \
     && find /opt/conda/ -type f,l -name '*.js.map' -delete \
