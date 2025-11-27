@@ -53,27 +53,48 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
-      # Make sure buildx is used
+      - name: Log in to Harbor Registry
+        env:
+          HARBOR_USER: ${{ secrets.HARBOR_ROBOT_USER }}
+          HARBOR_PWD: ${{ secrets.HARBOR_ROBOT_PWD }}
+          DOCKER_CLIENT_TIMEOUT: 300
+          COMPOSE_HTTP_TIMEOUT: 300
+        run: |
+          echo "$HARBOR_PWD" | docker login harbor.user.eopf.eodc.eu \
+            --username "$HARBOR_USER" \
+            --password-stdin
+        timeout-minutes: 10
+
+      # Build and push image with buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
-      # Log in to EOPF Container Registry
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
         with:
-          registry: harbor.user.eopf.eodc.eu
-          username: ${{ secrets.HARBOR_ROBOT_USER }}
-          password: ${{ secrets.HARBOR_ROBOT_PWD }}
-
-      # Build and push image
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
-          tags: harbor.user.eopf.eodc.eu/jupyterdask/eopf-jupyterlab:latest
-          file: eopf-jupyterlab/eopf-jupyterlab.dockerfile
+          driver-opts: |
+            network=host
+            
+      - name: Build and push multi-platform image
+        env:
+          DOCKER_CLIENT_TIMEOUT: 600
+          COMPOSE_HTTP_TIMEOUT: 600
+        run: |
+          SHOULD_PUSH="${{ github.ref == 'refs/heads/main' && github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}"
+          
+          if [ "$SHOULD_PUSH" = "true" ]; then
+            docker buildx build \
+              --platform linux/amd64,linux/arm64 \
+              --push \
+              --tag harbor.user.eopf.eodc.eu/jupyterdask/eopf-jupyterlab:latest \
+              --file eopf-jupyterlab/eopf-jupyterlab.dockerfile \
+              .
+          else
+            echo "Skipping push - not on main branch or not a push/workflow_dispatch event"
+            docker buildx build \
+              --platform linux/amd64,linux/arm64 \
+              --tag harbor.user.eopf.eodc.eu/jupyterdask/eopf-jupyterlab:latest \
+              --file eopf-jupyterlab/eopf-jupyterlab.dockerfile \
+              .
+          fi
+        timeout-minutes: 60
 
 
   build-dask-image:
@@ -95,27 +116,49 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
-      # Make sure buildx is used
+# Log in to EOPF Container Registry with custom timeout
+      - name: Log in to Harbor Registry
+        env:
+          HARBOR_USER: ${{ secrets.HARBOR_ROBOT_USER }}
+          HARBOR_PWD: ${{ secrets.HARBOR_ROBOT_PWD }}
+          DOCKER_CLIENT_TIMEOUT: 300
+          COMPOSE_HTTP_TIMEOUT: 300
+        run: |
+          echo "$HARBOR_PWD" | docker login harbor.user.eopf.eodc.eu \
+            --username "$HARBOR_USER" \
+            --password-stdin
+        timeout-minutes: 10
+
+      # Build and push image with buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: |
+            network=host
             
-      # Log in to EOPF Container Registry
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: harbor.user.eopf.eodc.eu
-          username: ${{ secrets.HARBOR_ROBOT_USER }}
-          password: ${{ secrets.HARBOR_ROBOT_PWD }}
-
-      # Build and push image
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' || github.event_name == 'workflow_dispatch'}}
-          tags: harbor.user.eopf.eodc.eu/jupyterdask/eopf-dask:latest
-          file: eopf-dask/eopf-dask.dockerfile
+      - name: Build and push multi-platform image
+        env:
+          DOCKER_CLIENT_TIMEOUT: 600
+          COMPOSE_HTTP_TIMEOUT: 600
+        run: |
+          SHOULD_PUSH="${{ github.ref == 'refs/heads/main' && github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}"
+          
+          if [ "$SHOULD_PUSH" = "true" ]; then
+            docker buildx build \
+              --platform linux/amd64,linux/arm64 \
+              --push \
+              --tag harbor.user.eopf.eodc.eu/jupyterdask/eopf-dask:latest \
+              --file eopf-jupyterlab/eopf-dask.dockerfile \
+              .
+          else
+            echo "Skipping push - not on main branch or not a push/workflow_dispatch event"
+            docker buildx build \
+              --platform linux/amd64,linux/arm64 \
+              --tag harbor.user.eopf.eodc.eu/jupyterdask/eopf-dask:latest \
+              --file eopf-jupyterlab/eopf-dask.dockerfile \
+              .
+          fi
+        timeout-minutes: 60
 
   build-zarr-driver-image:
     runs-on: ubuntu-latest
@@ -127,24 +170,46 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
-      # Make sure buildx is used
+# Log in to EOPF Container Registry with custom timeout
+      - name: Log in to Harbor Registry
+        env:
+          HARBOR_USER: ${{ secrets.HARBOR_ROBOT_USER }}
+          HARBOR_PWD: ${{ secrets.HARBOR_ROBOT_PWD }}
+          DOCKER_CLIENT_TIMEOUT: 300
+          COMPOSE_HTTP_TIMEOUT: 300
+        run: |
+          echo "$HARBOR_PWD" | docker login harbor.user.eopf.eodc.eu \
+            --username "$HARBOR_USER" \
+            --password-stdin
+        timeout-minutes: 10
+
+      # Build and push image with buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
-      # Log in to EOPF Container Registry
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
         with:
-          registry: harbor.user.eopf.eodc.eu
-          username: ${{ secrets.HARBOR_ROBOT_USER }}
-          password: ${{ secrets.HARBOR_ROBOT_PWD }}
-
-      # Build and push image
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
-          tags: harbor.user.eopf.eodc.eu/jupyterdask/eopf-zarr-driver:latest
-          file: eopf-zarr-driver/Dockerfile
+          driver-opts: |
+            network=host
+            
+      - name: Build and push multi-platform image
+        env:
+          DOCKER_CLIENT_TIMEOUT: 600
+          COMPOSE_HTTP_TIMEOUT: 600
+        run: |
+          SHOULD_PUSH="${{ github.ref == 'refs/heads/main' && github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}"
+          
+          if [ "$SHOULD_PUSH" = "true" ]; then
+            docker buildx build \
+              --platform linux/amd64,linux/arm64 \
+              --push \
+              --tag harbor.user.eopf.eodc.eu/jupyterdask/eopf-zarr-driver:latest \
+              --file eopf-jupyterlab/eopf-zarr-driver.dockerfile \
+              .
+          else
+            echo "Skipping push - not on main branch or not a push/workflow_dispatch event"
+            docker buildx build \
+              --platform linux/amd64,linux/arm64 \
+              --tag harbor.user.eopf.eodc.eu/jupyterdask/eopf-zarr-driver:latest \
+              --file eopf-jupyterlab/eopf-zarr-driver.dockerfile \
+              .
+          fi
+        timeout-minutes: 60
