@@ -52,7 +52,7 @@ jobs:
         
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-
+# Log in to EOPF Container Registry with retry logic
       - name: Log in to Harbor Registry
         env:
           HARBOR_USER: ${{ secrets.HARBOR_ROBOT_USER }}
@@ -60,10 +60,28 @@ jobs:
           DOCKER_CLIENT_TIMEOUT: 300
           COMPOSE_HTTP_TIMEOUT: 300
         run: |
-          echo "$HARBOR_PWD" | docker login harbor.user.eopf.eodc.eu \
-            --username "$HARBOR_USER" \
-            --password-stdin
-        timeout-minutes: 10
+          max_attempts=5
+          attempt=1
+          
+          while [ $attempt -le $max_attempts ]; do
+            echo "Attempt $attempt of $max_attempts..."
+            
+            if timeout 120 bash -c 'echo "$HARBOR_PWD" | docker login harbor.user.eopf.eodc.eu --username "$HARBOR_USER" --password-stdin'; then
+              echo "Login successful!"
+              exit 0
+            else
+              echo "Login failed (attempt $attempt)"
+              if [ $attempt -lt $max_attempts ]; then
+                sleep 5
+              fi
+            fi
+            
+            attempt=$((attempt + 1))
+          done
+          
+          echo "Failed to login after $max_attempts attempts"
+          exit 1
+        timeout-minutes: 15
 
       # Build and push image with buildx
       - name: Set up Docker Buildx
@@ -116,7 +134,7 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
-# Log in to EOPF Container Registry with custom timeout
+# Log in to EOPF Container Registry with retry logic
       - name: Log in to Harbor Registry
         env:
           HARBOR_USER: ${{ secrets.HARBOR_ROBOT_USER }}
@@ -124,10 +142,28 @@ jobs:
           DOCKER_CLIENT_TIMEOUT: 300
           COMPOSE_HTTP_TIMEOUT: 300
         run: |
-          echo "$HARBOR_PWD" | docker login harbor.user.eopf.eodc.eu \
-            --username "$HARBOR_USER" \
-            --password-stdin
-        timeout-minutes: 10
+          max_attempts=5
+          attempt=1
+          
+          while [ $attempt -le $max_attempts ]; do
+            echo "Attempt $attempt of $max_attempts..."
+            
+            if timeout 120 bash -c 'echo "$HARBOR_PWD" | docker login harbor.user.eopf.eodc.eu --username "$HARBOR_USER" --password-stdin'; then
+              echo "Login successful!"
+              exit 0
+            else
+              echo "Login failed (attempt $attempt)"
+              if [ $attempt -lt $max_attempts ]; then
+                sleep 5
+              fi
+            fi
+            
+            attempt=$((attempt + 1))
+          done
+          
+          echo "Failed to login after $max_attempts attempts"
+          exit 1
+        timeout-minutes: 15
 
       # Build and push image with buildx
       - name: Set up Docker Buildx
@@ -170,7 +206,7 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
-# Log in to EOPF Container Registry with custom timeout
+# Log in to EOPF Container Registry with retry logic
       - name: Log in to Harbor Registry
         env:
           HARBOR_USER: ${{ secrets.HARBOR_ROBOT_USER }}
@@ -178,10 +214,28 @@ jobs:
           DOCKER_CLIENT_TIMEOUT: 300
           COMPOSE_HTTP_TIMEOUT: 300
         run: |
-          echo "$HARBOR_PWD" | docker login harbor.user.eopf.eodc.eu \
-            --username "$HARBOR_USER" \
-            --password-stdin
-        timeout-minutes: 10
+          max_attempts=5
+          attempt=1
+          
+          while [ $attempt -le $max_attempts ]; do
+            echo "Attempt $attempt of $max_attempts..."
+            
+            if timeout 120 bash -c 'echo "$HARBOR_PWD" | docker login harbor.user.eopf.eodc.eu --username "$HARBOR_USER" --password-stdin'; then
+              echo "Login successful!"
+              exit 0
+            else
+              echo "Login failed (attempt $attempt)"
+              if [ $attempt -lt $max_attempts ]; then
+                sleep 5
+              fi
+            fi
+            
+            attempt=$((attempt + 1))
+          done
+          
+          echo "Failed to login after $max_attempts attempts"
+          exit 1
+        timeout-minutes: 15
 
       # Build and push image with buildx
       - name: Set up Docker Buildx
