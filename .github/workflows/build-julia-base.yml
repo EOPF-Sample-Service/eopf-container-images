@@ -21,12 +21,12 @@ jobs:
       
             
       # Log in to EOPF Container Registry
-      - name: Log in to GitHub Container Registry
+      - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
-          registry: https://harbor.user.eopf.eodc.eu/
-          username: ${{ secrets.HARBOR_ROBOT_USER }}
-          password: ${{ secrets.HARBOR_ROBOT_PWD }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
 
       # Build and push image
@@ -36,5 +36,5 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: harbor.user.eopf.eodc.eu/jupyterdask/julia-base:latest
+          tags: ghcr.io/${{ github.repository }}/julia-base:latest
           file: eopf-jupyterlab/eopf-jupyterlab-julia-base.dockerfile

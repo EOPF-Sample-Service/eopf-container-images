@@ -1,5 +1,5 @@
-ARG REGISTRY=harbor.user.eopf.eodc.eu
-ARG OWNER=jupyterdask
+ARG REGISTRY=ghcr.io
+ARG OWNER=eopf-sample-service/eopf-container-images
 ARG BASE_IMAGE=$REGISTRY/$OWNER/julia-base
 FROM $BASE_IMAGE
 
