@@ -14,7 +14,7 @@ dependencies:
   - nbclassic
   - dask
   - dask-gateway
-  - xarray-eopf=0.2.4
+  - xarray-eopf=0.2.5
   - netCDF4
   - zarr
   - fsspec
