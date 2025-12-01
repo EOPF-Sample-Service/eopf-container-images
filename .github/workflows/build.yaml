@@ -72,7 +72,7 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
-          tags: ghcr.io/${{ github.repository }}/eopf-jupyterlab:latest
+          tags: ghcr.io/eopf-sample-service/eopf-container-images/eopf-jupyterlab:latest
           file: eopf-jupyterlab/eopf-jupyterlab.dockerfile
 
 
@@ -117,7 +117,7 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' || github.event_name == 'workflow_dispatch'}}
-          tags: ghcr.io/${{ github.repository }}/eopf-dask:latest
+          tags: ghcr.io/eopf-sample-service/eopf-container-images/eopf-dask:latest
           file: eopf-dask/eopf-dask.dockerfile
 
   build-zarr-driver-image:
@@ -150,5 +150,5 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
-          tags: ghcr.io/${{ github.repository }}/eopf-zarr-driver:latest
+          tags: ghcr.io/eopf-sample-service/eopf-container-images/eopf-zarr-driver:latest
           file: eopf-zarr-driver/Dockerfile
