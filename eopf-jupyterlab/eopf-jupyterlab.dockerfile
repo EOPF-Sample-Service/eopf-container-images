@@ -20,12 +20,17 @@ RUN apt-get update && \
 COPY conda-lock.yml /tmp/conda-lock.yml
 COPY eopf-jupyterlab/gateway.yml "/home/${NB_USER}/.config/dask/gateway.yaml"
 
+
+RUN apt-get update && \
+    apt-get install -y libjpeg8 libtiff6 libsimdjson-dev libxml2 && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN mamba install -y -n base --file /tmp/conda-lock.yml \
-    && mamba clean --all --yes \
     && find /opt/conda/ -type f,l -name '*.a' -delete \
     && find /opt/conda/ -type f,l -name '*.pyc' -delete \
     && find /opt/conda/ -type f,l -name '*.js.map' -delete \
     && rm -rf /opt/conda/pkgs
+
 
 
 RUN fix-permissions /etc/jupyter/ \
