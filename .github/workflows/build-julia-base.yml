@@ -36,5 +36,5 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}/julia-base:latest
+          tags: ghcr.io/eopf-sample-service/eopf-container-images/julia-base:latest
           file: eopf-jupyterlab/eopf-jupyterlab-julia-base.dockerfile
