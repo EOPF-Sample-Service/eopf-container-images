@@ -36,7 +36,7 @@ dependencies:
   - ipyleaflet
   - shapely
   - pystac-client
-  - xcube-eopf=0.3.0
+  - xcube-eopf=3.1.0
   - scikit-image
   - hvplot
   - datashader
