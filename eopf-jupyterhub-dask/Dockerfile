@@ -23,7 +23,8 @@ RUN apt-get update && \
 
 # Install required Python packages using pip
 # These packages are required for JupyterHub compatibility and Dask operations
-# Note: dask, dask-gateway, and distributed are already in the base image
+# Note: dask, dask-gateway, and distributed are already in the base image installed for dask user
+# Install system-wide so they're available for all users
 RUN pip install --no-cache-dir \
     jupyterhub \
     jupyterlab \
@@ -31,6 +32,9 @@ RUN pip install --no-cache-dir \
     jupyterlab-git \
     nbgitpuller \
     dask-labextension
+
+# Add dask user's local packages to Python path so EOPF packages are accessible
+ENV PYTHONPATH="/home/dask/.local/lib/python3.11/site-packages:${PYTHONPATH}"
 
 # Expose JupyterLab port
 EXPOSE 8888
