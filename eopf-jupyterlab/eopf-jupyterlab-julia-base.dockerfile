@@ -21,14 +21,14 @@ RUN /opt/setup-scripts/setup_julia.py \
     && rm -rf "/home/${NB_USER}/.cache/" \
     && fix-permissions /etc/jupyter/ \
     && fix-permissions "${CONDA_DIR}"  \
-    && fix-permissions "/home/${NB_USER}" 
+    && fix-permissions "/home/${NB_USER}" \
     # Setup IJulia kernel & other packages
-    #&& /opt/setup-scripts/setup-julia-packages.bash
+    && /opt/setup-scripts/setup-julia-packages.bash
 
-COPY eopf-jupyterlab/Manifest.toml /opt/julia/environments/v1.12/
-COPY eopf-jupyterlab/Project.toml /opt/julia/environments/v1.12/
+COPY eopf-jupyterlab/Manifest.toml /opt/julia/environments/eopf-zarr/
+COPY eopf-jupyterlab/Project.toml /opt/julia/environments/eopf-zarr/
 
 RUN fix-permissions "${JULIA_DEPOT_PATH}" \
     && ls -la "${JULIA_DEPOT_PATH}" \ 
-    && julia -e "using Pkg; Pkg.instantiate(); Pkg.precompile()" \
+    && julia -e "using Pkg; Pkg.activate(\"eopf-zarr\", shared=true); Pkg.instantiate(); Pkg.precompile()" \
     && fix-permissions "${JULIA_DEPOT_PATH}"
