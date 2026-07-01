@@ -6,7 +6,7 @@ FROM ghcr.io/dask/dask-notebook:latest
 
 LABEL maintainer="EOPF Sample Service"
 LABEL description="EOPF-Zarr GDAL Driver with working ReadAsArray and EOPF plugin functionality"
-LABEL version="4.0.0"
+LABEL version="5.0.0"
 
 USER root
 
@@ -53,7 +53,7 @@ RUN git clone --depth 1 https://github.com/EOPF-Sample-Service/GDAL-ZARR-EOPF.gi
         -DGDAL_LIBRARY="/opt/conda/lib/libgdal.so" \
         -DCMAKE_INSTALL_RPATH="/opt/conda/lib" \
         -DCMAKE_BUILD_RPATH="/opt/conda/lib" && \
-    make -j$(nproc) && \
+    make -j$(nproc) gdal_EOPFZarr && \
     echo "Built EOPF driver with GDAL $(gdal-config --version)" && \
     # SOLUTION: Copy to actual GDAL plugin directory (not custom path)
     cp gdal_EOPFZarr.so /opt/conda/lib/gdalplugins/ && \
