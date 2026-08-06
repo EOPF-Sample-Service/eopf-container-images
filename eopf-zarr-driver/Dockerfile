@@ -29,6 +29,9 @@ RUN mamba install -y -c conda-forge \
     xarray \
     zarr \
     matplotlib \
+    nbgitpuller \
+    mystmd \
+    jupyterlab-myst \
     jupyterhub-singleuser \
     nbgitpuller \
     mystmd \
